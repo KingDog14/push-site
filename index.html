@@ -11,6 +11,10 @@
             await OneSignal.init({
                 appId: "b94d9a6a-3ce4-4d0d-8e56-4743f95f152b",
             });
+            // Автоматический показ запроса через 5 секунд
+            setTimeout(() => {
+                OneSignal.showSlidedownPrompt();
+            }, 5000);
         });
     </script>
 </head>
