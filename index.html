@@ -2,24 +2,102 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Push Site</title>
-    <!-- Подключаем OneSignal SDK -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заработок в интернете | Push-уведомления</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f0f2f5;
+            color: #1e2a3e;
+        }
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        button {
+            background: #3b82f6;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            padding: 12px 24px;
+            margin: 10px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        button#unsubscribeBtn {
+            background: #ef4444;
+        }
+        button:hover {
+            opacity: 0.9;
+            transform: scale(0.98);
+        }
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        p { line-height: 1.5; margin-bottom: 1rem; }
+    </style>
+    <!-- OneSignal SDK -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
+        // Инициализация OneSignal
         window.OneSignalDeferred = window.OneSignalDeferred || [];
         OneSignalDeferred.push(async function(OneSignal) {
             await OneSignal.init({
                 appId: "b94d9a6a-3ce4-4d0d-8e56-4743f95f152b",
             });
-            // Автоматический показ запроса через 5 секунд
+            // Автоматически показать запрос через 5 секунд (если ещё не подписан)
             setTimeout(() => {
                 OneSignal.showSlidedownPrompt();
             }, 5000);
         });
+
+        // Функция для привязки кнопок после полной загрузки DOM
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ждём, пока OneSignal станет доступен глобально
+            function waitForOneSignal(callback) {
+                if (window.OneSignalDeferred && window.OneSignalDeferred.push) {
+                    window.OneSignalDeferred.push(callback);
+                } else {
+                    setTimeout(() => waitForOneSignal(callback), 100);
+                }
+            }
+
+            // Кнопка подписки
+            const subBtn = document.getElementById('subscribeBtn');
+            if (subBtn) {
+                subBtn.addEventListener('click', () => {
+                    waitForOneSignal((OneSignal) => {
+                        OneSignal.showSlidedownPrompt();
+                    });
+                });
+            }
+
+            // Кнопка отписки
+            const unsubBtn = document.getElementById('unsubscribeBtn');
+            if (unsubBtn) {
+                unsubBtn.addEventListener('click', () => {
+                    waitForOneSignal((OneSignal) => {
+                        OneSignal.setSubscription(false);
+                        alert('Вы отписались от уведомлений. Чтобы подписаться снова, нажмите "Подписаться".');
+                    });
+                });
+            }
+        });
     </script>
 </head>
 <body>
-    <h1>Тест push-уведомлений</h1>
-    <p>Через несколько секунд появится запрос на подписку.</p>
+    <div class="card">
+        <h1>💸 Push-уведомления для заработка</h1>
+        <p>Подпишитесь, чтобы получать лучшие способы заработка, обзоры криптобирж и бонусы.</p>
+        <button id="subscribeBtn">✅ Подписаться</button>
+        <button id="unsubscribeBtn">🔕 Отписаться</button>
+        <p style="font-size: 0.9rem; margin-top: 20px;">Это бесплатно, отписка в один клик.</p>
+    </div>
 </body>
 </html>
