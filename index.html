@@ -84,22 +84,11 @@
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
         window.OneSignalDeferred = window.OneSignalDeferred || [];
-        OneSignalDeferred.push(function(OneSignal) {
-            OneSignal.init({
-                appId: "YOUR_ONESIGNAL_APP_ID",   // ← ЗАМЕНИ НА СВОЙ APP ID ИЗ ONESIGNAL
+        OneSignalDeferred.push(async function(OneSignal) {
+            await OneSignal.init({
+                appId: "b94d9a6a-3ce4-4d0d-8e56-4743f95f152b",
             });
         });
-
-        // функция для ручного вызова запроса подписки (можно использовать по кнопке)
-        function requestPushPermission() {
-            if (window.OneSignalDeferred) {
-                window.OneSignalDeferred.push(function(OneSignal) {
-                    OneSignal.showSlidedownPrompt();
-                });
-            } else {
-                alert("OneSignal ещё не загружен, попробуйте через пару секунд");
-            }
-        }
     </script>
 </head>
 <body>
