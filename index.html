@@ -3,33 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Заработок в интернете | Push-уведомления</title>
+    <title>Push уведомления — заработок</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 800px;
-            margin: 40px auto;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            max-width: 700px;
+            margin: 50px auto;
             padding: 20px;
-            background: #f0f2f5;
-            color: #1e2a3e;
+            background: #f2f4f8;
+            text-align: center;
         }
         .card {
             background: white;
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            text-align: center;
+            border-radius: 32px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
         button {
             background: #3b82f6;
             border: none;
             color: white;
             font-size: 1.2rem;
-            padding: 12px 24px;
-            margin: 10px;
-            border-radius: 40px;
-            cursor: pointer;
             font-weight: bold;
+            padding: 14px 28px;
+            margin: 12px;
+            border-radius: 60px;
+            cursor: pointer;
             transition: 0.2s;
         }
         button#unsubscribeBtn {
@@ -37,67 +36,61 @@
         }
         button:hover {
             opacity: 0.9;
-            transform: scale(0.98);
+            transform: scale(0.97);
         }
-        h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-        p { line-height: 1.5; margin-bottom: 1rem; }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
     </style>
     <!-- OneSignal SDK -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
-        // Инициализация OneSignal
+        // Инициализация OneSignal (стандартный код из документации)
         window.OneSignalDeferred = window.OneSignalDeferred || [];
-        OneSignalDeferred.push(async function(OneSignal) {
-            await OneSignal.init({
+        OneSignalDeferred.push(function(OneSignal) {
+            OneSignal.init({
                 appId: "b94d9a6a-3ce4-4d0d-8e56-4743f95f152b",
             });
-            // Автоматически показать запрос через 5 секунд (если ещё не подписан)
-            setTimeout(() => {
-                OneSignal.showSlidedownPrompt();
-            }, 5000);
         });
 
-        // Функция для привязки кнопок после полной загрузки DOM
+        // Функция для кнопки подписки (рабочий метод)
+        function subscribePush() {
+            // Используем OneSignal.push, как в документации
+            window.OneSignalDeferred.push(function(OneSignal) {
+                OneSignal.showSlidedownPrompt();
+            });
+        }
+
+        // Функция для отписки
+        function unsubscribePush() {
+            window.OneSignalDeferred.push(function(OneSignal) {
+                OneSignal.setSubscription(false);
+                alert("Вы отписались от уведомлений. Чтобы подписаться снова, нажмите 'Подписаться'.");
+            });
+        }
+
+        // Привязываем кнопки после загрузки страницы
         document.addEventListener('DOMContentLoaded', function() {
-            // Ждём, пока OneSignal станет доступен глобально
-            function waitForOneSignal(callback) {
-                if (window.OneSignalDeferred && window.OneSignalDeferred.push) {
-                    window.OneSignalDeferred.push(callback);
-                } else {
-                    setTimeout(() => waitForOneSignal(callback), 100);
-                }
-            }
-
-            // Кнопка подписки
             const subBtn = document.getElementById('subscribeBtn');
-            if (subBtn) {
-                subBtn.addEventListener('click', () => {
-                    waitForOneSignal((OneSignal) => {
-                        OneSignal.showSlidedownPrompt();
-                    });
-                });
-            }
+            if (subBtn) subBtn.onclick = subscribePush;
 
-            // Кнопка отписки
             const unsubBtn = document.getElementById('unsubscribeBtn');
-            if (unsubBtn) {
-                unsubBtn.addEventListener('click', () => {
-                    waitForOneSignal((OneSignal) => {
-                        OneSignal.setSubscription(false);
-                        alert('Вы отписались от уведомлений. Чтобы подписаться снова, нажмите "Подписаться".');
-                    });
-                });
-            }
+            if (unsubBtn) unsubBtn.onclick = unsubscribePush;
         });
     </script>
 </head>
 <body>
-    <div class="card">
-        <h1>💸 Push-уведомления для заработка</h1>
-        <p>Подпишитесь, чтобы получать лучшие способы заработка, обзоры криптобирж и бонусы.</p>
-        <button id="subscribeBtn">✅ Подписаться</button>
-        <button id="unsubscribeBtn">🔕 Отписаться</button>
-        <p style="font-size: 0.9rem; margin-top: 20px;">Это бесплатно, отписка в один клик.</p>
-    </div>
+<div class="card">
+    <h1>💸 Уведомления о заработке</h1>
+    <p>Подпишитесь, чтобы получать лучшие способы заработка, бонусы криптобирж и стратегии ставок.</p>
+    <button id="subscribeBtn">✅ Подписаться</button>
+    <button id="unsubscribeBtn">🔕 Отписаться</button>
+    <p style="font-size: 0.85rem; margin-top: 20px;">Это бесплатно и не отвлекает. Вы можете отписаться в любой момент.</p>
+</div>
 </body>
 </html>
